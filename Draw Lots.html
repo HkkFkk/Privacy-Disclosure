@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+
+  <style>
+    body {
+       background-color: palegoldenrod;
+     }
+
+ </style>
+
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Draw Lots</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #000;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    #container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #poem {
+      color: #fff;
+      font-size: 24px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <div id="container">
+    <button onclick="togglePoem()">Toggle</button>
+    <div id="poem"></div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const poemDiv = document.getElementById('poem');
+    const poemTexts = [
+      "大吉",
+      "中吉",
+      "小吉",
+      "末吉",
+      "凶",
+      "大凶",
+      "maybe······血光之灾？",
+      "很好，买彩票去吧",
+      "不错，今天吃点好的",
+      "没救了。",
+    ];
+    let showingPoem = false;
+
+    // Particle class
+    class Particle {
+      constructor(x, y, radius, color, velocity) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color;
+        this.velocity = velocity;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.closePath();
+      }
+
+      update() {
+        this.draw();
+        this.x += this.velocity.x;
+        this.y += this.velocity.y;
+      }
+    }
+
+    // Initialize particles
+    const particles = [];
+    function init() {
+      for (let i = 0; i < 200; i++) {
+        const radius = Math.random() * 2 + 1;
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const color = '#fff';
+        const velocity = {
+          x: (Math.random() - 0.5) * 2,
+          y: (Math.random() - 0.5) * 2
+        };
+        particles.push(new Particle(x, y, radius, color, velocity));
+      }
+    }
+
+    // Animation loop
+    function animate() {
+      requestAnimationFrame(animate);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(particle => {
+        particle.update();
+      });
+    }
+
+    init();
+    animate();
+
+    // Toggle poem
+    function togglePoem() {
+      if (showingPoem) {
+        poemDiv.innerHTML = '';
+        showingPoem = false;
+      } else {
+        const randomIndex = Math.floor(Math.random() * poemTexts.length);
+        poemDiv.innerHTML = poemTexts[randomIndex];
+        showingPoem = true;
+      }
+    }
+  </script>
+</body>
+</html>

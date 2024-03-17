@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Take Photo with Particle Background</title>
+
+  
+  <style>
+     body {
+        background-color: yellow;
+      }
+
+  </style>
+
+
+  <style>
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden; /* 禁止滚动条 */
+    }
+    
+    #container {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+    }
+    
+    #cursor {
+        position: absolute;
+        width: 50px; /* 设置图片的宽度 */
+        height: auto; /* 让高度自适应宽度 */
+        pointer-events: none; /* 使光标不影响图片的定位 */
+    }
+</style>
+
+
+
+</head>
+<body>
+  <button id="startCamera">Start Camera</button>
+  <button id="takePhoto" disabled>Take Photo</button>
+  <canvas id="particleCanvas" style="position: fixed; top: 0; left: 0; z-index: -1;"></canvas>
+  <video id="video" width="640" height="480" autoplay style="display: none;"></video>
+  <canvas id="canvas" width="640" height="480"></canvas>
+  <button id="analyzePhoto" disabled>Analyze Photo</button>
+  <br>
+  <p><a href="luck.html"><button id="luck">Luck?</button></a></p>
+
+  <br>
+  <p><a href="____.html"><button id="luck">?</button></a></p>
+  
+  <script>
+    // Particle background setup
+    const particleCanvas = document.getElementById('particleCanvas');
+    const particleCtx = particleCanvas.getContext('2d');
+
+    function resizeCanvas() {
+      particleCanvas.width = window.innerWidth;
+      particleCanvas.height = window.innerHeight;
+    }
+
+    resizeCanvas(); // Set canvas size initially
+
+    window.addEventListener('resize', resizeCanvas); // Update canvas size when window resized
+
+    const particles = [];
+    const numParticles = 100;
+
+    for (let i = 0; i < numParticles; i++) {
+      particles.push({
+        x: Math.random() * particleCanvas.width,
+        y: Math.random() * particleCanvas.height,
+        size: Math.random() * 5 + 1, // random size between 1 and 6
+        speedX: Math.random() * 3 - 1.5, // random speed between -1.5 and 1.5
+        speedY: Math.random() * 3 - 1.5, // random speed between -1.5 and 1.5
+        color: '#fff'
+      });
+    }
+
+    function drawParticles() {
+      particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+      particles.forEach(particle => {
+        particle.x += particle.speedX;
+        particle.y += particle.speedY;
+
+        if (particle.x < 0 || particle.x > particleCanvas.width) {
+          particle.speedX *= -1;
+        }
+        if (particle.y < 0 || particle.y > particleCanvas.height) {
+          particle.speedY *= -1;
+        }
+
+        particleCtx.fillStyle = particle.color;
+        particleCtx.beginPath();
+        particleCtx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        particleCtx.fill();
+      });
+      requestAnimationFrame(drawParticles);
+    }
+
+    drawParticles();
+
+    // Camera setup
+    const startCameraButton = document.getElementById('startCamera');
+    const takePhotoButton = document.getElementById('takePhoto');
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const analyzePhotoButton = document.getElementById('analyzePhoto');
+    const constraints = {
+      video: true
+    };
+
+    startCameraButton.addEventListener('click', function() {
+      navigator.mediaDevices.getUserMedia(constraints)
+        .then(function(stream) {
+          video.srcObject = stream;
+          startCameraButton.disabled = true;
+          takePhotoButton.disabled = false;
+        })
+        .catch(function(err) {
+          console.error('Error accessing the camera: ', err);
+        });
+    });
+
+    takePhotoButton.addEventListener('click', function() {
+      const context = canvas.getContext('2d');
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      analyzePhotoButton.disabled = false;
+      alert('Photo taken! You can save it or process further.');
+    });
+
+    analyzePhotoButton.addEventListener('click', function() {
+      const canvasDataUrl = canvas.toDataURL('image/png');
+      localStorage.setItem('photo', canvasDataUrl);
+      window.location.href = 'description.html';
+    });
+  </script>
+
+
+
+<div id="container">
+  <img id="cursor" src="image\让我看看.jpg" alt="cursor">
+</div>
+
+<script>
+  var cursor = document.getElementById('cursor');
+  
+  document.addEventListener('mousemove', function(e) {
+      var x = e.clientX;
+      var y = e.clientY;
+      
+      cursor.style.left = x + 'px';
+      cursor.style.top = y + 'px';
+  });
+</script>
+
+
+
+</body>
+</html>

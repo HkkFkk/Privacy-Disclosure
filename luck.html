@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>运势查询</title>
+
+<style>
+    body {
+       background-color: pink;
+     }
+
+ </style>
+
+
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    form {
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+<form id="fortuneForm">
+    <h2>请输入您的出生日期、性别和手机号码</h2>
+    <label for="birthdate">出生日期:</label>
+    <input type="date" id="birthdate" name="birthdate" required><br><br>
+    <label for="gender">性别:</label>
+    <select id="gender" name="gender" required>
+        <option value="male">男</option>
+        <option value="female">女</option>
+    </select><br><br>
+    <label for="phone">手机号码:</label>
+    <input type="tel" id="phone" name="phone" pattern="[0-9]{11}" required><br><br>
+    <button type="submit">确认</button>
+</form>
+    <br>
+    <a href="Draw Lots.html"><button id="drawLots">Draw Lots</button></a>
+<script>
+    document.getElementById("fortuneForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        // Generate random fortune, lucky color, and inauspicious activity
+        var fortune = ["今天是美好的一天！", "健康财富双丰收！", "小心别摔倒哦！","破财消灾","桃花泛滥","Σ(っ °Д °;)っ血光之灾啊！！！"];
+        var luckyColors = ["红色", "绿色", "蓝色","粉色","黄色","白色","橙色","青色","紫色"];
+        var inauspiciousActivities = ["理发", "买电子产品", "和别人争吵","剪指甲","出门","和朋友聚餐","打联机游戏","买彩票"];
+
+        var randomFortuneIndex = Math.floor(Math.random() * fortune.length);
+        var randomLuckyColorIndex = Math.floor(Math.random() * luckyColors.length);
+        var randomInauspiciousActivityIndex = Math.floor(Math.random() * inauspiciousActivities.length);
+
+        var fortuneMessage = "今日运势：" + fortune[randomFortuneIndex] + "<br>";
+        fortuneMessage += "幸运颜色：" + luckyColors[randomLuckyColorIndex] + "<br>";
+        fortuneMessage += "今天不适合做的事情：" + inauspiciousActivities[randomInauspiciousActivityIndex];
+
+        // Display fortune
+        document.body.innerHTML = "<h2>您的今日运势</h2>" + fortuneMessage;
+    });
+</script>
+</body>
+</html>

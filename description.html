@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photo Description</title>
+
+
+  <style>
+    body {
+       background-color: red;
+     }
+
+ </style>
+
+
+</head>
+<body>
+  <p id="description">Loading description...</p>
+  <script>
+    const photoDataUrl = localStorage.getItem('photo');
+    const img = new Image();
+    img.src = photoDataUrl;
+
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    img.onload = function() {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+      
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const description = analyzePhoto(imageData);
+      document.getElementById('description').textContent = description;
+    };
+
+    function analyzePhoto(imageData) {
+      const descriptions = [
+        "This photo captures the essence of nature.",
+        "The vibrant colors in this photo are truly captivating.",
+        "There is a sense of tranquility in this photo.",
+        "The composition of this photo is simply mesmerizing.",
+        "This photo tells a story of its own.",
+        "The lighting in this photo adds depth and dimension.",
+        "There is an ethereal quality to this photo.",
+        "The details in this photo are striking.",
+        "This photo evokes a sense of nostalgia.",
+        "The contrast in this photo creates a powerful effect."
+      ];
+      const randomIndex = Math.floor(Math.random() * descriptions.length);
+      return descriptions[randomIndex];
+    }
+  </script>
+</body>
+</html>
